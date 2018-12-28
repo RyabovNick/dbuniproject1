@@ -48,7 +48,7 @@
       <template slot="items" slot-scope="props">
         <td>{{ props.item.name }}</td>
         <td class="text-xs-right">{{ props.item.surname }}</td>
-        <td class="text-xs-right">{{ props.item.birth_date }}</td>
+        <td class="text-xs-right">{{ props.item.date_birth }}</td>
         <td class="text-xs-right">{{ props.item.n_group }}</td>
         <td class="text-xs-right">{{ props.item.score }}</td>
         <td class="text-xs-right">{{ props.item.city }}</td>
@@ -81,7 +81,8 @@ export default {
       { text: 'date_birth', value: 'date_birth' },
       { text: 'n_group', value: 'n_group' },
       { text: 'score', value: 'score' },
-      { text: 'city', value: 'city', sortable: false }
+      { text: 'city', value: 'city', sortable: false },
+      { text: 'Actions', value: 'name', sortable: false }
     ],
     students: [],
     editedIndex: -1,
