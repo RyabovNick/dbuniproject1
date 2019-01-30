@@ -264,6 +264,10 @@ router.post('/students', (req, res, next) => {
 })
 ```
 
+**POST, PUT, DELETE запросы не получится выполнить просто в браузере.**
+
+Используйте для этого расширение REST Client в vscode или установите дома [POSTMAN](https://www.getpostman.com/)
+
 POST ждёт данные в JSON формате
 
 `let name = req.body.name`
