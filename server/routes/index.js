@@ -1,4 +1,4 @@
-var router = require('express').Router()
+const router = require('express').Router()
 
 //приставка ко всем ссылкам
 router.use('/api', require('./students'))

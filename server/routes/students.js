@@ -1,5 +1,5 @@
-const pool = require('../config/config'),
-    router = require('express').Router()
+const pool = require('../config/config')
+const router = require('express').Router()
 
 /**
  * Получение списка студентов
@@ -15,6 +15,8 @@ router.get('/students', (req, res, next) => {
 
             res.send(result)
         })
+        //Обязательно! Необходимо освободить соединение, иначе через 100 штук приложение упадёт
+        con.release()
     })
 })
 
@@ -23,7 +25,7 @@ router.get('/students', (req, res, next) => {
  */
 router.get('/students/city/:city', (req, res, next) => {
     //достать переменную :city из ссылки
-    var city = req.params['city']
+    let city = req.params['city']
 
     pool.getConnection((err, con) => {
         if (err) throw err
@@ -36,6 +38,7 @@ router.get('/students/city/:city', (req, res, next) => {
 
             res.send(result)
         })
+        con.release()
     })
 })
 
@@ -57,6 +60,7 @@ router.get('/students/:n_z', (req, res, next) => {
 
             res.send(result)
         })
+        con.release()
     })
 })
 
@@ -89,6 +93,7 @@ router.post('/students', (req, res, next) => {
                 res.send(result)
             }
         )
+        con.release()
     })
 })
 
@@ -126,6 +131,7 @@ router.put('/students/:n_z', (req, res, next) => {
                 res.send(result)
             }
         )
+        con.release()
     })
 })
 
@@ -134,7 +140,7 @@ router.put('/students/:n_z', (req, res, next) => {
  */
 router.delete('/students/:n_z', (req, res, next) => {
     //достать переменную :city из ссылки
-    var n_z = req.params['n_z']
+    let n_z = req.params['n_z']
 
     pool.getConnection((err, con) => {
         if (err) throw err
@@ -147,6 +153,7 @@ router.delete('/students/:n_z', (req, res, next) => {
 
             res.send(result)
         })
+        con.release()
     })
 })
 
