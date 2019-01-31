@@ -4,7 +4,7 @@
       <v-toolbar-title>My CRUD</v-toolbar-title>
       <v-divider class="mx-2" inset vertical></v-divider>
       <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="1000px">
+      <v-dialog v-model="dialog" max-width="500px">
         <v-btn slot="activator" color="primary" dark class="mb-2">New Item</v-btn>
         <v-card>
           <v-card-title>
@@ -21,7 +21,7 @@
                   <v-text-field v-model="editedItem.surname" label="Фамилия"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.birth_date" label="Дата рождения"></v-text-field>
+                  <v-text-field v-model="editedItem.date_birth" label="Дата рождения"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.n_group" label="Номер группы"></v-text-field>
@@ -31,6 +31,9 @@
                 </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.city" label="Город"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.address" label="Адрес"></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -52,6 +55,7 @@
         <td class="text-xs-right">{{ props.item.n_group }}</td>
         <td class="text-xs-right">{{ props.item.score }}</td>
         <td class="text-xs-right">{{ props.item.city }}</td>
+        <td class="text-xs-right">{{ props.item.address }}</td>
         <td class="justify-center layout px-0">
           <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
           <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -72,16 +76,17 @@ export default {
     dialog: false,
     headers: [
       {
-        text: 'name',
+        text: 'Имя',
         align: 'left',
         sortable: false,
         value: 'name'
       },
-      { text: 'surname', value: 'surname' },
-      { text: 'date_birth', value: 'date_birth' },
-      { text: 'n_group', value: 'n_group' },
-      { text: 'score', value: 'score' },
-      { text: 'city', value: 'city', sortable: false },
+      { text: 'Фамилия', value: 'surname' },
+      { text: 'Дата рождения', value: 'date_birth' },
+      { text: 'Номер группы', value: 'n_group' },
+      { text: 'Балл', value: 'score' },
+      { text: 'Город', value: 'city' },
+      { text: 'Адрес', value: 'address' },
       { text: 'Actions', value: 'name', sortable: false }
     ],
     students: [],
@@ -92,7 +97,8 @@ export default {
       date_birth: '',
       n_group: 0,
       score: 0,
-      city: ''
+      city: '',
+      address: ''
     },
     defaultItem: {
       name: '',
@@ -100,7 +106,8 @@ export default {
       date_birth: '',
       n_group: 0,
       score: 0,
-      city: ''
+      city: '',
+      address: ''
     }
   }),
 
@@ -120,19 +127,17 @@ export default {
     this.initialize()
   },
 
-  mounted() {
-    axios
-      .get('http://localhost:8080/api/students')
-      .then(response => (this.students = response.data))
-      .catch(error => {
-        console.log(error)
-        this.errored_priem = true
-      })
-  },
-
   methods: {
     initialize() {
-      this.students = []
+      axios
+        .get('http://localhost:8080/api/students')
+        .then(response => {
+          this.students = response.data
+          console.log(this.students)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
 
     editItem(item) {
@@ -144,7 +149,15 @@ export default {
     deleteItem(item) {
       const index = this.students.indexOf(item)
       confirm('Are you sure you want to delete this item?') &&
-        this.students.splice(index, 1)
+        axios
+          .delete(`http://localhost:8080/api/students/${item.n_z}`)
+          .then(response => {
+            console.log(response)
+            this.students.splice(index, 1)
+          })
+          .catch(error => {
+            throw error
+          })
     },
 
     close() {
@@ -157,9 +170,35 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.students[this.editedIndex], this.editedItem)
+        console.log(this.editedItem)
+        axios
+          .put(
+            `http://localhost:8080/api/students/${this.editedItem.n_z}`,
+            this.editedItem
+          )
+          .then(response => {
+            console.log(response)
+            console.log('this.editedIndex: ', this.editedIndex)
+            console.log('this.students: ', this.students)
+            console.log('this.editedItem: ', this.editedItem)
+            Object.assign(this.students[this.editedIndex], this.editedItem)
+          })
+          .catch(error => {
+            throw error
+          })
       } else {
-        this.students.push(this.editedItem)
+        console.log(this.editedItem)
+        axios
+          .post('http://localhost:8080/api/students', this.editedItem)
+          .then(response => {
+            console.log(response)
+            this.editedItem.n_z = response.data.insertId
+            this.students.push(this.editedItem)
+          })
+          .catch(error => {
+            console.log('error: ', error)
+            throw error
+          })
       }
       this.close()
     }
