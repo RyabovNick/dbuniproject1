@@ -130,7 +130,7 @@ export default {
   methods: {
     initialize() {
       axios
-        .get('http://localhost:8080/api/students')
+        .get('http://project1.unidb.ru:8447/api/students')
         .then(response => {
           this.students = response.data
           console.log(response.data)
@@ -141,6 +141,7 @@ export default {
         })
     },
 
+    //ERROR: не обновляет 1-ый элемент
     editItem(item) {
       this.editedIndex = this.students.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -151,7 +152,7 @@ export default {
       const index = this.students.indexOf(item)
       confirm('Are you sure you want to delete this item?') &&
         axios
-          .delete(`http://localhost:8080/api/students/${item.n_z}`)
+          .delete(`http://project1.unidb.ru:8447/api/students/${item.n_z}`)
           .then(response => {
             console.log(response)
             this.students.splice(index, 1)
@@ -174,7 +175,7 @@ export default {
         console.log(this.editedItem)
         axios
           .put(
-            `http://localhost:8080/api/students/${this.editedItem.n_z}`,
+            `http://project1.unidb.ru:8447/api/students/${this.editedItem.n_z}`,
             this.editedItem
           )
           .then(response => {
@@ -190,7 +191,7 @@ export default {
       } else {
         console.log(this.editedItem)
         axios
-          .post('http://localhost:8080/api/students', this.editedItem)
+          .post('http://project1.unidb.ru:8447/api/students', this.editedItem)
           .then(response => {
             console.log(response)
             this.editedItem.n_z = response.data.insertId
