@@ -10,11 +10,14 @@ router.get('/students', (req, res, next) => {
     pool.getConnection((err, con) => {
         if (err) throw err
 
-        con.query('Select * from students', (error, result) => {
-            if (error) throw error
-
-            res.send(result)
-        })
+        con.query(
+            'Select *, DATE_FORMAT(date_birth, "%Y-%m-%d") as dateBirthFormat from students',
+            (error, result) => {
+                if (error) throw error
+                console.log(result)
+                res.send(result)
+            }
+        )
         //Обязательно! Необходимо освободить соединение, иначе через 100 штук приложение упадёт
         con.release()
     })
@@ -70,11 +73,10 @@ router.get('/students/:n_z', (req, res, next) => {
 router.post('/students', (req, res, next) => {
     pool.getConnection((err, con) => {
         if (err) throw err
-
         //получаем параметры из JSON
         let name = req.body.name
         let surname = req.body.surname
-        let date_birth = req.body.date_birth
+        let date_birth = req.body.dateBirthFormat
         let n_group = req.body.n_group
         let score = req.body.score
         let city = req.body.city
@@ -109,7 +111,7 @@ router.put('/students/:n_z', (req, res, next) => {
         //получаем параметры из JSON
         let name = req.body.name
         let surname = req.body.surname
-        let date_birth = req.body.date_birth
+        let date_birth = req.body.dateBirthFormat
         let n_group = req.body.n_group
         let score = req.body.score
         let city = req.body.city

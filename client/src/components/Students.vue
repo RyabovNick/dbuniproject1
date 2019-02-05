@@ -21,7 +21,7 @@
                   <v-text-field v-model="editedItem.surname" label="Фамилия"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.date_birth" label="Дата рождения"></v-text-field>
+                  <v-text-field v-model="editedItem.dateBirthFormat" label="Дата рождения"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.n_group" label="Номер группы"></v-text-field>
@@ -50,13 +50,13 @@
     <v-data-table :headers="headers" :items="students" class="elevation-1">
       <template slot="items" slot-scope="props">
         <td>{{ props.item.name }}</td>
-        <td class="text-xs-right">{{ props.item.surname }}</td>
-        <td class="text-xs-right">{{ props.item.date_birth }}</td>
-        <td class="text-xs-right">{{ props.item.n_group }}</td>
-        <td class="text-xs-right">{{ props.item.score }}</td>
-        <td class="text-xs-right">{{ props.item.city }}</td>
-        <td class="text-xs-right">{{ props.item.address }}</td>
-        <td class="justify-center layout px-0">
+        <td>{{ props.item.surname }}</td>
+        <td>{{ props.item.dateBirthFormat}}</td>
+        <td>{{ props.item.n_group }}</td>
+        <td>{{ props.item.score }}</td>
+        <td>{{ props.item.city }}</td>
+        <td>{{ props.item.address }}</td>
+        <td class="layout">
           <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
           <v-icon small @click="deleteItem(props.item)">delete</v-icon>
         </td>
@@ -82,7 +82,7 @@ export default {
         value: 'name'
       },
       { text: 'Фамилия', value: 'surname' },
-      { text: 'Дата рождения', value: 'date_birth' },
+      { text: 'Дата рождения', value: 'dateBirthFormat' },
       { text: 'Номер группы', value: 'n_group' },
       { text: 'Балл', value: 'score' },
       { text: 'Город', value: 'city' },
@@ -94,7 +94,7 @@ export default {
     editedItem: {
       name: '',
       surname: '',
-      date_birth: '',
+      dateBirthFormat: '',
       n_group: 0,
       score: 0,
       city: '',
@@ -103,7 +103,7 @@ export default {
     defaultItem: {
       name: '',
       surname: '',
-      date_birth: '',
+      dateBirthFormat: '',
       n_group: 0,
       score: 0,
       city: '',
@@ -133,6 +133,7 @@ export default {
         .get('http://localhost:8080/api/students')
         .then(response => {
           this.students = response.data
+          console.log(response.data)
           console.log(this.students)
         })
         .catch(error => {
